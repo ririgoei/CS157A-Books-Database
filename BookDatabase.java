@@ -129,17 +129,21 @@ public class BookDatabase {
     
     }
     
-    public void populateData()
+    public void populateData() throws SQLException
     {
     	FileReader file;
 		try {
 			file = new FileReader("authors.csv");
 			Scanner in = new Scanner(file);
-			
+			in.nextLine();
 			while(in.hasNextLine())
 			{
-			String[] temp = in.nextLine().split(",");
-			System.out.println(temp[1]);
+			String[] temp = in.nextLine().trim().split(",");
+			String insert = "INSERT INTO authors (authorID, firstName, lastName)"
+					+ "VALUES (" + temp[0] + ", '" + temp[1] + "', '"  + temp[2] +"' )";
+			
+			stmt.executeUpdate(insert);
+				
 			}
 			
 		} catch (FileNotFoundException e) {
@@ -151,6 +155,8 @@ public class BookDatabase {
     public static void main(String[] args) throws SQLException
     {
     	BookDatabase bd = new BookDatabase();
+    	bd.createSchema();
+    	bd.createTables();
     	bd.populateData();
     	conn.close();
     }
